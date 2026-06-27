@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f5f6fb" />
+  <title>Timewallet 2.0</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="Timewallet home">
+        <span class="brand-mark"><svg viewBox="0 0 32 32" aria-hidden="true"><path class="ai-ring" d="M10 3h12l7 7v12l-7 7H10l-7-7V10l7-7Z"/><circle cx="16" cy="16" r="8"/><path d="M16 10v6l4 2"/><circle class="ai-node" cx="7" cy="11" r="1.5"/><circle class="ai-node" cx="25" cy="21" r="1.5"/><path d="M8.5 11H11M21 21h2.5"/></svg></span>
+        <span>Timewallet <b>2.0</b></span>
+      </a>
+
+      <nav class="main-nav" aria-label="Primary navigation">
+        <button class="nav-item active" data-view="dashboard"><span data-icon="grid"></span>Overview</button>
+        <button class="nav-item" data-view="time"><span data-icon="clock"></span>Time entries</button>
+        <button class="nav-item" data-view="expenses"><span data-icon="receipt"></span>Expenses <span class="nav-badge" id="expenseBadge">4</span></button>
+        <button class="nav-item" data-view="reports"><span data-icon="chart"></span>Reports</button>
+        <button class="nav-item" data-view="settings"><span data-icon="settings"></span>Settings</button>
+      </nav>
+
+      <div class="sidebar-label label-row"><span>Jobs</span><button id="quickJob" aria-label="Add new job">+</button></div>
+      <nav class="project-nav" aria-label="Jobs" id="jobNav"></nav>
+
+      <div class="sidebar-footer">
+        <button class="profile" id="profileSettings" aria-label="Edit profile and settings">
+          <div class="avatar">AV</div>
+          <div><strong id="sidebarUser">Alex Verne</strong><small id="sidebarWorkspace">Freelance workspace</small></div>
+          <span class="profile-menu">•••</span>
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobileMenu" aria-label="Open menu"><span data-icon="menu"></span></button>
+        <div>
+          <p class="eyebrow"><span id="todayLabel">YOUR WORKSPACE</span><span class="current-time" id="currentTime">--:--:--</span></p>
+          <h1 id="pageTitle">Good morning, Alex</h1>
+        </div>
+        <div class="top-actions">
+          <div class="period-toggle" aria-label="Overview period"><button class="active" data-period="week">Weekly</button><button data-period="month">Monthly</button></div>
+          <label class="quick-currency"><span>Currency</span><select id="quickCurrency" aria-label="Choose display currency"></select></label>
+          <button class="icon-button" id="themeToggle" aria-label="Toggle theme"><span data-icon="moon"></span></button>
+          <button class="primary-btn" id="quickAdd"><span data-icon="plus"></span>Add entry</button>
+        </div>
+      </header>
+
+      <section class="view active" id="dashboardView">
+        <div class="live-rate-strip" aria-label="Live currency rates"><span class="rate-live-dot"></span><strong>Live FX</strong><span>USD → INR <b id="usdInrRate">Updating…</b></span><span>ILS → INR <b id="ilsInrRate">Updating…</b></span><small id="liveRateStatus">Connecting</small></div>
+        <div class="dashboard-grid">
+          <article class="timer-card">
+            <div class="timer-top">
+              <div><span class="live-dot"></span><span id="timerStatus">Ready to focus</span></div>
+              <div class="timer-day-total"><span>Today total</span><strong id="todayTotal">0m</strong></div>
+            </div>
+            <button class="start-btn" id="timerButton"><span class="start-icon" data-icon="play"></span><span>Start timer</span></button>
+            <div class="timer-time" id="timerDisplay">00:00:00</div>
+            <div class="timer-fields">
+              <label><span data-icon="briefcase"></span><select id="timerProject"><option>Arc Studio</option><option>Northstar</option><option>Personal</option></select></label>
+              <label><span data-icon="edit"></span><input id="timerNote" placeholder="What are you working on?" /></label>
+            </div>
+          </article>
+
+          <article class="metric-card purple">
+            <div class="metric-icon"><span data-icon="clock"></span></div>
+            <div class="metric-meta"><span id="hoursPeriodLabel">Hours this week</span><em class="trend up">Live</em></div>
+            <strong id="hoursMetric">32h 40m</strong>
+            <p>Actual tracked time</p>
+          </article>
+
+          <article class="metric-card mint">
+            <div class="metric-icon"><span data-icon="wallet"></span></div>
+            <div class="metric-meta"><span>Gross earnings</span></div>
+            <strong id="earningsMetric">$2,940.00</strong>
+            <p>tracked across 3 projects</p>
+          </article>
+
+          <article class="metric-card peach">
+            <div class="metric-icon"><span data-icon="receipt"></span></div>
+            <div class="metric-meta"><span>Expenses</span></div>
+            <strong id="expensesMetric">$684.20</strong>
+            <p>6 recorded this month</p>
+          </article>
+        </div>
+
+        <div class="content-grid">
+          <article class="panel chart-panel">
+            <div class="panel-head">
+              <div><h2 id="activityChartTitle">Weekly activity</h2><p id="activityChartSubtitle">Time tracked by day</p></div>
+              <div class="chart-legend"><span><i class="legend-purple"></i>Billable</span><span><i class="legend-pale"></i>Non-billable</span></div>
+            </div>
+            <div class="chart-wrap">
+              <div class="y-axis"><span>8h</span><span>6h</span><span>4h</span><span>2h</span><span>0h</span></div>
+              <div class="bar-chart" id="barChart"></div>
+            </div>
+          </article>
+
+          <article class="panel balance-panel">
+            <div class="panel-head"><div><h2>Wallet balance</h2><p id="walletPeriodLabel">Current week</p></div><button class="more-btn">•••</button></div>
+            <div class="donut" id="donut"><div><strong id="netMetric">$2,255</strong><span>Net income</span></div></div>
+            <div class="balance-row"><span><i class="income-dot"></i>Income</span><strong id="incomeSummary">$2,940.00</strong></div>
+            <div class="balance-row"><span><i class="expense-dot"></i>Expenses</span><strong id="expenseSummary">$684.20</strong></div>
+          </article>
+        </div>
+
+        <article class="panel entries-panel">
+          <div class="panel-head">
+            <div><h2>Recent activity</h2><p>Your latest time and expense entries</p></div>
+            <div class="segmented"><button class="active" data-feed="all">All</button><button data-feed="time">Time</button><button data-feed="expense">Expenses</button></div>
+          </div>
+          <div class="activity-list" id="activityList"></div>
+          <button class="view-all" data-target="time">View all activity <span data-icon="arrow"></span></button>
+        </article>
+      </section>
+
+      <section class="view" id="timeView">
+        <div class="section-title"><div><h2>Time entries</h2><p>Review and manage every tracked work session.</p></div><button class="primary-btn" data-open="time"><span data-icon="plus"></span>New time entry</button></div>
+        <div class="stats-row" id="timeStats"></div>
+        <article class="panel table-panel"><div class="table-tools"><div class="search"><span data-icon="search"></span><input id="timeSearch" placeholder="Search time entries" /></div><div class="working-filters"><select id="timePeriodFilter" aria-label="Time period"><option value="all">All dates</option><option value="week">This week</option><option value="month">This month</option></select><select id="timeJobFilter" aria-label="Filter time by job"></select><select id="billableFilter" aria-label="Billable filter"><option value="all">All types</option><option value="billable">Billable</option><option value="nonbillable">Non-billable</option></select></div></div><div class="data-table" id="timeTable"></div></article>
+      </section>
+
+      <section class="view" id="expensesView">
+        <div class="section-title"><div><h2>Expenses</h2><p>Keep project costs and receipts in one tidy place.</p></div><button class="primary-btn" data-open="expense"><span data-icon="plus"></span>Add expense</button></div>
+        <div class="expense-summary" id="expenseStats"></div>
+        <article class="panel table-panel"><div class="table-tools"><div class="search"><span data-icon="search"></span><input id="expenseSearch" placeholder="Search expenses" /></div><div class="working-filters"><select id="expensePeriodFilter" aria-label="Expense period"><option value="all">All dates</option><option value="week">This week</option><option value="month">This month</option></select><select id="expenseJobFilter" aria-label="Filter expenses by job"></select><select id="categoryFilter" aria-label="Filter by category"></select></div></div><div class="data-table" id="expenseTable"></div></article>
+      </section>
+
+      <section class="view" id="reportsView">
+        <div class="section-title"><div><h2>Reports</h2><p>A clear view of where your time and money go.</p></div><div class="file-actions"><button class="secondary-btn" id="importBtn"><span data-icon="upload"></span>Import</button><button class="secondary-btn" id="exportCsvBtn"><span data-icon="download"></span>CSV</button><button class="primary-btn" id="exportExcelBtn"><span data-icon="download"></span>Excel</button><input id="importFile" type="file" accept=".xlsx,.xls,.csv" hidden></div></div>
+        <div class="report-grid">
+          <article class="panel report-wide"><div class="panel-head"><div><h2>Job profitability</h2><p>Income, expenses, and effective hourly rate</p></div></div><div id="profitabilityChart" class="profitability"></div></article>
+          <article class="panel"><div class="panel-head"><div><h2>Time distribution</h2><p>By job</p></div></div><div class="report-donut"><div><strong>32.7h</strong><span>Total time</span></div></div><div id="projectLegend"></div></article>
+        </div>
+      </section>
+
+      <section class="view" id="settingsView">
+        <div class="section-title"><div><h2>Settings</h2><p>Personalize your profile, jobs, categories, and currencies.</p></div><button class="primary-btn" id="saveSettings"><span data-icon="check"></span>Save settings</button></div>
+        <div class="settings-grid">
+          <article class="panel settings-card"><div class="panel-head"><div><h2>Profile & workspace</h2><p>Used throughout your Timewallet.</p></div></div><div class="settings-form"><label>Your name<input id="settingName" /></label><label>Workspace name<input id="settingWorkspace" /></label><label>Display currency<select id="settingCurrency"></select></label></div></article>
+          <article class="panel settings-card"><div class="panel-head"><div><h2>Live currency rates</h2><p>Checked automatically every minute.</p></div><span class="live-status" id="settingsRateStatus">Connecting</span></div><div class="rate-grid" id="rateGrid"></div><p class="rate-source">Wise quotes for USD/INR and ILS/INR • live market rates for all other currencies • cached safely when offline</p></article>
+          <article class="panel settings-card"><div class="panel-head"><div><h2>Jobs</h2><p>Add, rename, recolor, or remove jobs.</p></div></div><form class="inline-add" id="jobForm"><input id="newJobName" required placeholder="New job name"><input id="newJobColor" type="color" value="#6157df" aria-label="Job color"><button class="primary-btn" type="submit">Add job</button></form><div class="manage-list" id="jobList"></div></article>
+          <article class="panel settings-card"><div class="panel-head"><div><h2>Expense categories</h2><p>Create and rename categories for your costs.</p></div></div><form class="inline-add" id="categoryForm"><input id="newCategoryName" required placeholder="New category"><button class="primary-btn" type="submit">Add category</button></form><div class="manage-list" id="categoryList"></div></article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head"><div><p class="eyebrow">QUICK ENTRY</p><h2 id="modalTitle">Add time entry</h2></div><button class="close-btn" id="closeModal" aria-label="Close">×</button></div>
+      <div class="entry-switch"><button class="active" data-type="time"><span data-icon="clock"></span>Time</button><button data-type="expense"><span data-icon="receipt"></span>Expense</button></div>
+      <form id="entryForm">
+        <div class="form-grid" id="timeFields">
+          <label class="wide">Description <span class="optional">Optional</span><input name="description" placeholder="e.g. Homepage design review" /></label>
+          <label>Job<select name="project"><option>Arc Studio</option><option>Northstar</option><option>Personal</option></select></label>
+          <label>Date<input name="date" type="date" required /></label>
+          <label>Start time<input name="start" type="time" value="09:00" /></label>
+          <label>End time<input name="end" type="time" value="10:30" /></label>
+          <label>Hourly rate<input name="rate" type="number" min="0" step="1" value="85" /></label>
+          <label>Currency<select name="timeCurrency" class="currency-select"></select></label>
+          <label class="check-label"><input name="billable" type="checkbox" checked />Billable time</label>
+        </div>
+        <div class="form-grid hidden" id="expenseFields">
+          <label class="wide">Expense name<input name="expenseName" placeholder="e.g. Adobe subscription" /></label>
+          <label>Amount<input name="amount" type="number" min="0" step="0.01" placeholder="0.00" /></label>
+          <label>Date<input name="expenseDate" type="date" /></label>
+          <label>Category<select name="category"><option>Software</option><option>Travel</option><option>Meals</option><option>Equipment</option><option>Other</option></select></label>
+          <label>Currency<select name="expenseCurrency" class="currency-select"></select></label>
+          <label>Job<select name="expenseProject"><option>Arc Studio</option><option>Northstar</option><option>Personal</option></select></label>
+          <label class="wide">Notes<textarea name="notes" placeholder="Add a note or receipt reference"></textarea></label>
+          <label class="wide receipt-upload">Receipt image <span class="optional">Optional</span><input name="receiptImage" type="file" accept="image/*"><small>JPG, PNG or WebP up to 1.5 MB</small></label>
+          <div class="wide receipt-preview" id="receiptPreview"></div>
+        </div>
+        <div class="modal-actions"><button type="button" class="secondary-btn" id="cancelModal">Cancel</button><button type="submit" class="primary-btn">Save entry</button></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"><span data-icon="check"></span><span>Entry saved</span></div>
+  <script src="vendor/xlsx.full.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
